@@ -21,7 +21,7 @@ USER_STATUSES = ["ACTIVE", "INACTIVE", "DELETED"]
 INVITATION_STATUSES = ["PENDING", "ACCEPTED", "EXPIRED", "CANCELLED"]
 API_VERSIONS = ["v1", "v2"]
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"]
-MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh"]
+MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh", "nutripae-cobertura"]
 FEATURES = ["create", "read", "update", "delete", "list", "manage"]
 
 # Module-Feature relationships
@@ -52,6 +52,11 @@ MODULE_FEATURES = [
     ("nutripae-rh", "update"),
     ("nutripae-rh", "delete"),
     ("nutripae-rh", "list"),
+    ("nutripae-cobertura", "create"),
+    ("nutripae-cobertura", "read"),
+    ("nutripae-cobertura", "update"),
+    ("nutripae-cobertura", "delete"),
+    ("nutripae-cobertura", "list"),
 ]
 
 # Permissions with granular structure: (name, version, method, module_name, feature_name)
@@ -91,6 +96,13 @@ PERMISSIONS = [
     ("nutripae-rh:update", "v1", "PUT", "nutripae-rh", "update"),
     ("nutripae-rh:delete", "v1", "DELETE", "nutripae-rh", "delete"),
     ("nutripae-rh:list", "v1", "GET", "nutripae-rh", "list"),
+
+    # Coverage permissions
+    ("nutripae-cobertura:create", "v1", "POST", "nutripae-cobertura", "create"),
+    ("nutripae-cobertura:read", "v1", "GET", "nutripae-cobertura", "read"),
+    ("nutripae-cobertura:update", "v1", "PUT", "nutripae-cobertura", "update"),
+    ("nutripae-cobertura:delete", "v1", "DELETE", "nutripae-cobertura", "delete"),
+    ("nutripae-cobertura:list", "v1", "GET", "nutripae-cobertura", "list"),
 ]
 
 ROLES = {
@@ -112,6 +124,11 @@ ROLES = {
         "nutripae-rh:update",
         "nutripae-rh:delete",
         "nutripae-rh:list",
+        "nutripae-cobertura:create",
+        "nutripae-cobertura:read",
+        "nutripae-cobertura:update",
+        "nutripae-cobertura:delete",
+        "nutripae-cobertura:list",
     ],
     "Basic User": [
         "user:read_own",
@@ -128,6 +145,17 @@ ROLES = {
         "nutripae-rh:update",
         "nutripae-rh:delete",
         "nutripae-rh:list",
+    ],
+    "NutriPAE-Cobertura User": [
+        "nutripae-cobertura:read",
+        "nutripae-cobertura:list",
+    ],
+    "NutriPAE-Cobertura Admin": [
+        "nutripae-cobertura:create",
+        "nutripae-cobertura:read",
+        "nutripae-cobertura:update",
+        "nutripae-cobertura:delete",
+        "nutripae-cobertura:list",
     ],
 }
 
