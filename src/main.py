@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, CORSMiddleware
 from fastapi.openapi.utils import get_openapi
 from contextlib import asynccontextmanager
 from core.config import settings
@@ -70,6 +70,15 @@ class EndpointFilter(logging.Filter):
 logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 # Set custom OpenAPI schema
 app.openapi = custom_openapi
+
+# Configurar CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite todas las origenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos
+    allow_headers=["*"],  # Permite todos los headers
+)
 
 # Rutas de autenticación
 app.include_router(
