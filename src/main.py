@@ -161,9 +161,59 @@ def root():
     return {"status": "healthy", "service": "pae-auth"}
 
 if __name__ == "__main__":
+    import os
+    
+    # Crear el directorio de logs si no existe
+    log_dir = "/var/log/containers"
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # Configurar logging básico para la aplicación
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] - %(message)s",
+        handlers=[
+            logging.StreamHandler(),  # Para mostrar en consola
+            logging.FileHandler("/var/log/containers/nutripae-auth.log", mode="a")
+        ]
+    )
+    
     # update uvicorn access logger format
     log_config = uvicorn.config.LOGGING_CONFIG
     log_config["formatters"]["access"][
         "fmt"
     ] = "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] - %(message)s"
+    
+    # Configurar handler para archivo de logs
+    log_config["handlers"]["file"] = {
+        "class": "logging.FileHandler",
+        "filename": "/var/log/containers/nutripae-auth.log",
+        "formatter": "access",
+        "mode": "a"
+    }
+    
+    # Asegurar que los handlers existan antes de modificar
+    for logger_name in ["uvicorn.access", "uvicorn"]:
+        if logger_name in log_config["loggers"]:
+            if "handlers" not in log_config["loggers"][logger_name]:
+                log_config["loggers"][logger_name]["handlers"] = ["default"]
+            if "file" not in log_config["loggers"][logger_name]["handlers"]:
+                log_config["loggers"][logger_name]["handlers"].append("file")
+    
+    # Configurar el logger raíz para también escribir al archivo
+    if "root" not in log_config["loggers"]:
+        log_config["loggers"]["root"] = {
+            "level": "INFO",
+            "handlers": ["default", "file"]
+        }
+    else:
+        if "handlers" not in log_config["loggers"]["root"]:
+            log_config["loggers"]["root"]["handlers"] = ["default"]
+        if "file" not in log_config["loggers"]["root"]["handlers"]:
+            log_config["loggers"]["root"]["handlers"].append("file")
+    
+    # Log de inicio
+    logger = logging.getLogger(__name__)
+    logger.info("Iniciando NutriPAE-AUTH con configuración de logging mejorada...")
+    
     uvicorn.run(app, host="0.0.0.0", port=8000, log_config=log_config)

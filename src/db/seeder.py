@@ -21,7 +21,7 @@ USER_STATUSES = ["ACTIVE", "INACTIVE", "DELETED"]
 INVITATION_STATUSES = ["PENDING", "ACCEPTED", "EXPIRED", "CANCELLED"]
 API_VERSIONS = ["v1", "v2"]
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"]
-MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh", "nutripae-cobertura"]
+MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh", "nutripae-cobertura", "nutripae-compras"]
 FEATURES = ["create", "read", "update", "delete", "list", "manage"]
 
 # Module-Feature relationships
@@ -57,6 +57,11 @@ MODULE_FEATURES = [
     ("nutripae-cobertura", "update"),
     ("nutripae-cobertura", "delete"),
     ("nutripae-cobertura", "list"),
+    ("nutripae-compras", "create"),
+    ("nutripae-compras", "read"),
+    ("nutripae-compras", "update"),
+    ("nutripae-compras", "delete"),
+    ("nutripae-compras", "list"),
 ]
 
 # Permissions with granular structure: (name, version, method, module_name, feature_name)
@@ -103,6 +108,13 @@ PERMISSIONS = [
     ("nutripae-cobertura:update", "v1", "PUT", "nutripae-cobertura", "update"),
     ("nutripae-cobertura:delete", "v1", "DELETE", "nutripae-cobertura", "delete"),
     ("nutripae-cobertura:list", "v1", "GET", "nutripae-cobertura", "list"),
+
+    # Compras permissions
+    ("nutripae-compras:create", "v1", "POST", "nutripae-compras", "create"),
+    ("nutripae-compras:read", "v1", "GET", "nutripae-compras", "read"),
+    ("nutripae-compras:update", "v1", "PUT", "nutripae-compras", "update"),
+    ("nutripae-compras:delete", "v1", "DELETE", "nutripae-compras", "delete"),
+    ("nutripae-compras:list", "v1", "GET", "nutripae-compras", "list"),
 ]
 
 ROLES = {
@@ -129,6 +141,11 @@ ROLES = {
         "nutripae-cobertura:update",
         "nutripae-cobertura:delete",
         "nutripae-cobertura:list",
+        "nutripae-compras:create",
+        "nutripae-compras:read",
+        "nutripae-compras:update",
+        "nutripae-compras:delete",
+        "nutripae-compras:list",
     ],
     "Basic User": [
         "user:read_own",
@@ -156,6 +173,17 @@ ROLES = {
         "nutripae-cobertura:update",
         "nutripae-cobertura:delete",
         "nutripae-cobertura:list",
+    ],
+    "NutriPAE-Compras User": [
+        "nutripae-compras:read",
+        "nutripae-compras:list",
+    ],
+    "NutriPAE-Compras Admin": [
+        "nutripae-compras:create",
+        "nutripae-compras:read",
+        "nutripae-compras:update",
+        "nutripae-compras:delete",
+        "nutripae-compras:list",
     ],
 }
 
