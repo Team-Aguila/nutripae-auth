@@ -21,7 +21,7 @@ USER_STATUSES = ["ACTIVE", "INACTIVE", "DELETED"]
 INVITATION_STATUSES = ["PENDING", "ACCEPTED", "EXPIRED", "CANCELLED"]
 API_VERSIONS = ["v1", "v2"]
 HTTP_METHODS = ["GET", "POST", "PUT", "DELETE", "PATCH"]
-MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh", "nutripae-cobertura", "nutripae-compras"]
+MODULES = ["auth", "user", "role", "permission", "invitation", "project", "nutripae-rh", "nutripae-cobertura", "nutripae-compras", "nutripae-menus"]
 FEATURES = ["create", "read", "update", "delete", "list", "manage"]
 
 # Module-Feature relationships
@@ -62,6 +62,11 @@ MODULE_FEATURES = [
     ("nutripae-compras", "update"),
     ("nutripae-compras", "delete"),
     ("nutripae-compras", "list"),
+    ("nutripae-menus", "create"),
+    ("nutripae-menus", "read"),
+    ("nutripae-menus", "update"),
+    ("nutripae-menus", "delete"),
+    ("nutripae-menus", "list"),
 ]
 
 # Permissions with granular structure: (name, version, method, module_name, feature_name)
@@ -115,6 +120,13 @@ PERMISSIONS = [
     ("nutripae-compras:update", "v1", "PUT", "nutripae-compras", "update"),
     ("nutripae-compras:delete", "v1", "DELETE", "nutripae-compras", "delete"),
     ("nutripae-compras:list", "v1", "GET", "nutripae-compras", "list"),
+
+    # Menus permissions
+    ("nutripae-menus:create", "v1", "POST", "nutripae-menus", "create"),
+    ("nutripae-menus:read", "v1", "GET", "nutripae-menus", "read"),
+    ("nutripae-menus:update", "v1", "PUT", "nutripae-menus", "update"),
+    ("nutripae-menus:delete", "v1", "DELETE", "nutripae-menus", "delete"),
+    ("nutripae-menus:list", "v1", "GET", "nutripae-menus", "list"),
 ]
 
 ROLES = {
@@ -146,6 +158,11 @@ ROLES = {
         "nutripae-compras:update",
         "nutripae-compras:delete",
         "nutripae-compras:list",
+        "nutripae-menus:create",
+        "nutripae-menus:read",
+        "nutripae-menus:update",
+        "nutripae-menus:delete",
+        "nutripae-menus:list",
     ],
     "Basic User": [
         "user:read_own",
@@ -184,6 +201,17 @@ ROLES = {
         "nutripae-compras:update",
         "nutripae-compras:delete",
         "nutripae-compras:list",
+    ],
+    "NutriPAE-Menus User": [
+        "nutripae-menus:read",
+        "nutripae-menus:list",
+    ],
+    "NutriPAE-Menus Admin": [
+        "nutripae-menus:create",
+        "nutripae-menus:read",
+        "nutripae-menus:update",
+        "nutripae-menus:delete",
+        "nutripae-menus:list",
     ],
 }
 
