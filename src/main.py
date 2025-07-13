@@ -18,6 +18,20 @@ from controllers import (
 from db.session import SessionLocal
 from db.seeder import seed_db
 import uvicorn
+
+# Custom formatter that handles OpenTelemetry fields safely
+class SafeOTelFormatter(logging.Formatter):
+    def formatMessage(self, record):
+        # Add default values for OpenTelemetry fields if they don't exist
+        if not hasattr(record, 'otelTraceID'):
+            record.otelTraceID = 'N/A'
+        if not hasattr(record, 'otelSpanID'):
+            record.otelSpanID = 'N/A'
+        if not hasattr(record, 'otelServiceName'):
+            record.otelServiceName = 'N/A'
+        
+        return super().formatMessage(record)
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Se ejecuta al iniciar la aplicación
@@ -168,7 +182,6 @@ if __name__ == "__main__":
     os.makedirs(log_dir, exist_ok=True)
     
     # Configurar logging básico para la aplicación
-    import logging
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] - %(message)s",
@@ -178,11 +191,20 @@ if __name__ == "__main__":
         ]
     )
     
-    # update uvicorn access logger format
+    # update uvicorn access logger format with safe OpenTelemetry fields
     log_config = uvicorn.config.LOGGING_CONFIG
-    log_config["formatters"]["access"][
-        "fmt"
-    ] = "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] - %(message)s"
+    
+    # Create a safe formatter that handles missing OpenTelemetry fields
+    log_config["formatters"]["access"] = {
+        "()": SafeOTelFormatter,
+        "fmt": "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] - %(message)s"
+    }
+    
+    # Create a safe formatter for other loggers
+    log_config["formatters"]["default"] = {
+        "()": SafeOTelFormatter,
+        "fmt": "%(asctime)s %(levelname)s [%(name)s] [%(filename)s:%(lineno)d] [trace_id=%(otelTraceID)s span_id=%(otelSpanID)s resource.service.name=%(otelServiceName)s] - %(message)s"
+    }
     
     # Configurar handler para archivo de logs
     log_config["handlers"]["file"] = {
